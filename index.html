@@ -55,7 +55,9 @@
         document.location.reload();
         return;
       }
-
+      
+      const delay = Math.max(500 - 40 * snake.length, 100);
+      
       // Redraw game every 100 ms
       setTimeout(function onTick() {
         clearCanvas();
