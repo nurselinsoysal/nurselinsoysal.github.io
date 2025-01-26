@@ -51,6 +51,18 @@
 
     // Listen for arrow key presses to change direction
     document.addEventListener("keydown", changeDirection);
+    document.getElementById("btnUp").addEventListener("click", () => {
+      if (dy === 0) { dx = 0; dy = -gridSize; }
+    });
+    document.getElementById("btnDown").addEventListener("click", () => {
+      if (dy === 0) { dx = 0; dy = gridSize; }
+    });
+    document.getElementById("btnLeft").addEventListener("click", () => {
+      if (dx === 0) { dx = -gridSize; dy = 0; }
+    });
+    document.getElementById("btnRight").addEventListener("click", () => {
+      if (dx === 0) { dx = gridSize; dy = 0; }
+    });
 
     // Start the game loop
     gameLoop();
