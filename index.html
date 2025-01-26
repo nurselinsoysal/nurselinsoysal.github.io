@@ -21,7 +21,7 @@
 </head>
 <body>
   <h1>Hello, Internet!</h1>
-  <p>naber to my first GitHub Pages site.</p>
+  <p>naberaq to my first GitHub Pages site.</p>
 
   <!-- A canvas for the Snake game -->
   <canvas id="gameCanvas" width="400" height="400" style="border:1px solid #000;"></canvas>
@@ -63,7 +63,7 @@
         moveSnake();
         drawSnake();
         gameLoop(); // Call gameLoop again
-      }, 100);
+      }, 500);
     }
 
     /**
@@ -88,7 +88,6 @@
      * Move the snake by adding a new head and removing the tail (unless we eat food).
      */
     function moveSnake() {
-      await sleep(500);
       const head = { x: snake[0].x + dx, y: snake[0].y + dy };
       snake.unshift(head);
 
@@ -180,9 +179,7 @@
       }
       return false;
     }
-    function sleep(ms) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    }
+
   </script>
 </body>
 </html>
