@@ -12,10 +12,173 @@
     h1 {
       color: #555;
     }
+    /* Optional: center the canvas */
+    #gameCanvas {
+      display: block;
+      margin: 20px 0;
+    }
   </style>
 </head>
 <body>
   <h1>Hello, Internet!</h1>
   <p>naber to my first GitHub Pages site.</p>
+
+  <!-- A canvas for the Snake game -->
+  <canvas id="gameCanvas" width="400" height="400" style="border:1px solid #000;"></canvas>
+
+  <script>
+    // Get references to the canvas and its drawing context
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // Snake and game variables
+    const gridSize = 20;         // Size of each square on the grid
+    let snake = [{ x: 200, y: 200 }]; // Initial snake position (head in the middle)
+    let dx = gridSize;           // Horizontal velocity (moving right initially)
+    let dy = 0;                  // Vertical velocity
+    let food = getRandomFoodPosition();
+    let score = 0;
+
+    // Listen for arrow key presses to change direction
+    document.addEventListener("keydown", changeDirection);
+
+    // Start the game loop
+    gameLoop();
+
+    /**
+     * Main game loop function, repeatedly called with a small delay.
+     */
+    function gameLoop() {
+      // If the game is over, alert and reload
+      if (didGameEnd()) {
+        alert("Game Over! Your final score: " + score);
+        document.location.reload();
+        return;
+      }
+
+      // Redraw game every 100 ms
+      setTimeout(function onTick() {
+        clearCanvas();
+        drawFood();
+        moveSnake();
+        drawSnake();
+        gameLoop(); // Call gameLoop again
+      }, 100);
+    }
+
+    /**
+     * Clear the canvas (fill with white).
+     */
+    function clearCanvas() {
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    /**
+     * Draw the snake on the canvas.
+     */
+    function drawSnake() {
+      ctx.fillStyle = "green";
+      snake.forEach(part => {
+        ctx.fillRect(part.x, part.y, gridSize, gridSize);
+      });
+    }
+
+    /**
+     * Move the snake by adding a new head and removing the tail (unless we eat food).
+     */
+    function moveSnake() {
+      const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+      snake.unshift(head);
+
+      // If we eat the food, increase score, and generate new food
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        food = getRandomFoodPosition();
+      } else {
+        // Otherwise remove the last piece (tail)
+        snake.pop();
+      }
+    }
+
+    /**
+     * Draw the food on the canvas.
+     */
+    function drawFood() {
+      ctx.fillStyle = "red";
+      ctx.fillRect(food.x, food.y, gridSize, gridSize);
+    }
+
+    /**
+     * Get a new random position for the food, snapped to the grid.
+     */
+    function getRandomFoodPosition() {
+      const foodX = Math.floor(Math.random() * (canvas.width / gridSize)) * gridSize;
+      const foodY = Math.floor(Math.random() * (canvas.height / gridSize)) * gridSize;
+      return { x: foodX, y: foodY };
+    }
+
+    /**
+     * Change the snake's direction based on arrow keys, ensuring no 180° turns.
+     */
+    function changeDirection(event) {
+      const LEFT_KEY = 37;
+      const UP_KEY = 38;
+      const RIGHT_KEY = 39;
+      const DOWN_KEY = 40;
+
+      switch (event.keyCode) {
+        case LEFT_KEY:
+          if (dx === 0) {
+            dx = -gridSize;
+            dy = 0;
+          }
+          break;
+        case UP_KEY:
+          if (dy === 0) {
+            dx = 0;
+            dy = -gridSize;
+          }
+          break;
+        case RIGHT_KEY:
+          if (dx === 0) {
+            dx = gridSize;
+            dy = 0;
+          }
+          break;
+        case DOWN_KEY:
+          if (dy === 0) {
+            dx = 0;
+            dy = gridSize;
+          }
+          break;
+      }
+    }
+
+    /**
+     * Check if the snake has collided with the walls or itself.
+     */
+    function didGameEnd() {
+      const head = snake[0];
+
+      // Collision with walls
+      if (
+        head.x < 0 ||
+        head.x >= canvas.width ||
+        head.y < 0 ||
+        head.y >= canvas.height
+      ) {
+        return true;
+      }
+
+      // Collision with itself
+      for (let i = 1; i < snake.length; i++) {
+        if (snake[i].x === head.x && snake[i].y === head.y) {
+          return true;
+        }
+      }
+      return false;
+    }
+  </script>
 </body>
 </html>
