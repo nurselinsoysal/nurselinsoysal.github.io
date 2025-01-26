@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>My GitHub Pages Website</title>
+  <title>My Website</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -88,6 +88,7 @@
      * Move the snake by adding a new head and removing the tail (unless we eat food).
      */
     function moveSnake() {
+      await sleep(500);
       const head = { x: snake[0].x + dx, y: snake[0].y + dy };
       snake.unshift(head);
 
@@ -178,6 +179,9 @@
         }
       }
       return false;
+    }
+    function sleep(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
     }
   </script>
 </body>
